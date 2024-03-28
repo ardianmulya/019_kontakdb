@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Kontak {
   final String nama;
   final String email;
@@ -45,5 +47,10 @@ class Kontak {
       foto: map['foto'] as String,
     );
   }
+
+   String toJson() => json.encode(toMap());
+
+  factory Kontak.fromJson(String source) =>
+      Kontak.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
