@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kontak_db/controller/kontak_controller.dart';
 import 'package:kontak_db/model/kontak.dart';
+import 'package:kontak_db/screen/home_view.dart';
 
 class FormKontak extends StatefulWidget {
   const FormKontak({super.key});
@@ -103,6 +104,12 @@ class _FormKontakState extends State<FormKontak> {
                             result['message'],
                           ),
                         ),
+                      );
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HomeView()),
+                        (route) => false,
                       );
                     }
                   },
