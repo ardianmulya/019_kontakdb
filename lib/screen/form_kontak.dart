@@ -39,7 +39,7 @@ class _FormKontakState extends State<FormKontak> {
   }
 
   @override
-    Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Contact'),
@@ -53,7 +53,7 @@ class _FormKontakState extends State<FormKontak> {
                 children: [
                   Container(
                     margin: const EdgeInsets.all(10),
-                    width: 350,
+                    width: double.infinity,
                     child: TextFormField(
                       keyboardType: TextInputType.name,
                       controller: _namaController,
@@ -65,7 +65,7 @@ class _FormKontakState extends State<FormKontak> {
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
-                    width: 350,
+                    width: double.infinity,
                     child: TextFormField(
                       keyboardType: TextInputType.emailAddress,
                       controller: _emailController,
@@ -77,7 +77,55 @@ class _FormKontakState extends State<FormKontak> {
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
-                    width: 350,
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _alamat == null
+                            ? const SizedBox(
+                                width: double.infinity,
+                                child: Text('Alamat'),
+                              )
+                            : Text('$_alamat'),
+                        _alamat == null
+                            ? TextButton(
+                                onPressed: () async {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MapsScreen(
+                                        onLocationSelected: (selectedAddress) {
+                                          setState(() {
+                                            _alamat = selectedAddress;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: const Text("Pilih Alamat"))
+                            : TextButton(
+                                onPressed: () async {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MapsScreen(
+                                        onLocationSelected: (selectedAddress) {
+                                          setState(() {
+                                            _alamat = selectedAddress;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: const Text('Ubah Alamat'))
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    width: double.infinity,
                     child: TextFormField(
                       keyboardType: TextInputType.number,
                       controller: _teleponController,
@@ -106,16 +154,16 @@ class _FormKontakState extends State<FormKontak> {
                   ),
                   ElevatedButton(
                       onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                      var result = await KontakController().addPerson(
-                        Kontak(
-                            nama: _namaController.text,
-                            email: _emailController.text,
-                            alamat: _alamat?? '',
-                            telepon: _teleponController.text,
-                            foto: _image!.path),
-                        _image,
-                      );
+                        if (_formKey.currentState!.validate()) {
+                          var result = await KontakController().addPerson(
+                            Kontak(
+                                nama: _namaController.text,
+                                email: _emailController.text,
+                                alamat: _alamat ?? '',
+                                telepon: _teleponController.text,
+                                foto: _image!.path),
+                            _image,
+                          );
 
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
