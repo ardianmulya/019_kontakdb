@@ -48,7 +48,61 @@ class _MapsScreenState extends State<MapsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+            appBar: AppBar(
+        title: Text("Select Location"),
+      ),
+      body: GoogleMap(
+        myLocationEnabled: true,
+        myLocationButtonEnabled: true,
+        buildingsEnabled: true,
+        trafficEnabled: true,
+        compassEnabled: true,
+        onMapCreated: onMapCreated,
+        initialCameraPosition: CameraPosition(
+          target: lastMapPosition ?? const LatLng(0.0, 0.0),
+          zoom: 15.0,
+        ),
+        markers: {
+          if (lastMapPosition != null)
+            Marker(
+              markerId: const MarkerId('currentLocation'),
+              position: lastMapPosition!,
+            )
+        },
+        onTap: (position) {
+          setState(() {
+            lastMapPosition = position;
+          });
+        },
+      ),
+      floatingActionButton: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FloatingActionButton(
+            onPressed: () async {
+              if (lastMapPosition != null) {
+                List<Placemark> placemarks = await placemarkFromCoordinates(
+                  lastMapPosition!.latitude,
+                  lastMapPosition!.longitude,
+                );
 
+                if (placemarks.isNotEmpty) {
+                  Placemark place = placemarks[0];
+                  String fullAddress =
+                      "${place.name},${place.street},${place.subLocality},${place.locality},${place.postalCode},${place.country}";
+                  widget.onLocationSelected(fullAddress);
+                } else {
+                  widget.onLocationSelected("No address found");
+                }
+
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Submit'),
+          )
+        ],
+      ),
     );
   }
 }
